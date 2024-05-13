@@ -1,0 +1,64 @@
+@import url('https://static.toss.im/tps/main.css');
+@import url('https://static.toss.im/tps/others.css');
+
+* {
+  font-family: 'Toss Product Sans', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.App {
+  text-align: center;
+  background-color: white;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.App-header {
+  width: 100%;
+  text-align: left; /* Align text to the left */
+  padding-left: 20px; /* Add padding to the left to space out the text from the edge */
+  font-size: calc(10px + 2vmin);
+  color: black;
+}
+
+.buttons {
+  margin: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.button.large {
+  width: 140px;
+  height: 100px;
+  margin: 10px;
+  font-size: 16px;
+  background-color: #e0e0e0;
+  border: none;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.button.round {
+  width: 50px;
+  height: 50px;
+  margin: 10px;
+  border-radius: 25px;
+  font-size: 24px;
+  border: none;
+}
+
+.emoji {
+  font-size: 40px;
+}
+
+.text {
+  font-size: 14px;
+}
