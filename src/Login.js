@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import './App.css';
 
 function Login() {
   const videoRef = useRef(null);
@@ -9,7 +10,7 @@ function Login() {
   useEffect(() => {
     async function enableStream() {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        const stream = await navigator.mediaDevices.getUserMedia({ video: {width: 640, height:480} });
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
         }
@@ -29,9 +30,10 @@ function Login() {
 
   return (
     <div style={{ position: 'relative' }}>
-      <video ref={videoRef} autoPlay playsInline width="640" height="480" />
-      {how === 'face' && <img src="guide-img/face-guide.png" style={{ position: 'absolute', top: 0, left: 0, width: '640px', height: '480px' }} alt="Face Guide" />}
-      {how === 'card' && <img src="guide-img/card-guide.png" style={{ position: 'absolute', top: 0, left: 0, width: '640px', height: '480px' }} alt="Card Guide" />}
+      <video ref={videoRef} autoPlay playsInline/>
+      {how === 'face' && <img src="guide-img/face-guide.png" id="guideImage" alt="Face Guide" />}
+      {how === 'card' && <img src="guide-img/card-guide.png" id="guideImage" alt="Card Guide" />}
+
     </div>
   );
 }

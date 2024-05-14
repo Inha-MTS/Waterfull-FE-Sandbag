@@ -71,3 +71,37 @@
 .text {
   font-size: 30px;
 }
+
+video {
+    transform: rotate(90deg); /* Rotate video 90 degrees clockwise */
+    transform-origin: center center; /* Ensure the rotation happens around the center */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(90deg);
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -100;
+    background-size: cover;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+#guideImage {
+    position: fixed;  /* Fixed position */
+    top: 0;
+    left: 0;
+    width: 100%;      /* Full viewport width */
+    height: 100%;     /* Full viewport height */
+    /* transform: rotate(90deg);  Rotate 90 degrees */
+    transform-origin: center center; /* Rotate around the center */
+    z-index: 10;      /* Above the video layer */
+}
+
