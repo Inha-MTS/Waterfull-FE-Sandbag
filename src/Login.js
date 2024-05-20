@@ -36,14 +36,25 @@ function Camera() {
         recorder.onstop = async () => {
           const blob = new Blob(chunks, { 'type' : 'video/mp4' });
           chunks = [];
+          
+          // 로컬에 저장하기 위한 URL 생성
+          const videoURL = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.style.display = 'none';
+          a.href = videoURL;
+          a.download = 'recorded-video.mp4'; // 다운로드될 파일의 이름
+          document.body.appendChild(a);
+          a.click();
+
+          // 임시 다운로드 링크 제거
+          window.URL.revokeObjectURL(videoURL);
+          a.remove();
 
           const response = await fetch('https://4a4vx7p4jhrv7wucp6pqisynsy0gfrfs.lambda-url.ap-northeast-2.on.aws/ ', {
             method: 'POST',
             body: blob,
             headers: {
-              'Content-Type': 'video/mp4',
-              'Allow-Control-Allow-Origin': '*',
-              'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
+              'Content-Type': 'video/mp4'
             },
           });
   
