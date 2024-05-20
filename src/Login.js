@@ -37,15 +37,18 @@ function Camera() {
           const blob = new Blob(chunks, { 'type' : 'video/mp4' });
           chunks = [];
 
-          const response = await fetch('https://p2pvgx6eak.execute-api.ap-northeast-2.amazonaws.com/dev/video', {
+          const response = await fetch('https://4a4vx7p4jhrv7wucp6pqisynsy0gfrfs.lambda-url.ap-northeast-2.on.aws/ ', {
             method: 'POST',
             body: blob,
             headers: {
               'Content-Type': 'video/mp4',
+              'Allow-Control-Allow-Origin': '*',
+              'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
             },
           });
   
           if (!response.ok) {
+            console.log(response);
             throw new Error('Video upload failed');
           }
   
