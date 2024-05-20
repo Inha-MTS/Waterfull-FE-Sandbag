@@ -1,7 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import axios from 'axios';
-
-function Login() {
+function Camera() {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
 
@@ -27,35 +25,45 @@ function Login() {
   }, []);
 
   useEffect(() => {
-    let imageCount = 0; // Add this line to track the number of images sent
+    const captureVideo = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        videoRef.current.srcObject = stream;
+        let chunks = [];
+        const recorder = new MediaRecorder(stream);
   
-    const sendImageToApi = () => {
-      const interval = setInterval(() => {
-        if (videoRef.current && canvasRef.current) {
-          const canvas = canvasRef.current;
-          const context = canvas.getContext('2d');
-          context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-          canvas.toBlob(async (blob) => {
-            const formData = new FormData();
-            formData.append('image', blob);
-            formData.append('fileName', `${++imageCount}.jpg`); // Update this line to use the imageCount
-            try {
-              await axios.post('https://p2pvgx6eak.execute-api.ap-northeast-2.amazonaws.com/dev/image', formData, {
-                headers: {
-                  'Content-Type': 'multipart/form-data'
-                }
-              });
-            } catch (err) {
-              console.error('Error sending the image:', err);
-            }
+        recorder.ondataavailable = e => chunks.push(e.data);
+        recorder.onstop = async () => {
+          const blob = new Blob(chunks, { 'type' : 'video/mp4' });
+          chunks = [];
+
+          const response = await fetch('https://p2pvgx6eak.execute-api.ap-northeast-2.amazonaws.com/dev/video', {
+            method: 'POST',
+            body: blob,
+            headers: {
+              'Content-Type': 'video/mp4',
+            },
           });
-        }
-      }, 2000);
   
-      return () => clearInterval(interval);
+          if (!response.ok) {
+            throw new Error('Video upload failed');
+          }
+  
+          // 스트림 정리
+          stream.getTracks().forEach(track => track.stop());
+        };
+  
+        recorder.start();
+        // 5초 후 녹화 중지
+        setTimeout(() => {
+          recorder.stop();
+        }, 5000);
+      } catch (error) {
+        console.error('Error capturing video:', error);
+      }
     };
   
-    sendImageToApi();
+    captureVideo();
   }, []);
 
   return (
@@ -66,4 +74,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Camera;
