@@ -9,14 +9,14 @@
 }
 
 .App {
-    width: 600px; /* Fixed width */
-    height: 1024px; /* Fixed height */
-    background-color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Optional: Adds shadow for better visibility */
+  width: 600px; /* Fixed width */
+  height: 1024px; /* Fixed height */
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Optional: Adds shadow for better visibility */
 }
 
 .App-header {
@@ -60,8 +60,8 @@
 }
 
 .lang-image {
-    width: 40px;
-    height: 40px;
+  width: 40px;
+  height: 40px;
 }
 
 .emoji {
@@ -73,35 +73,35 @@
 }
 
 video {
-    transform: rotate(90deg); /* Rotate video 90 degrees clockwise */
-    transform-origin: center center; /* Ensure the rotation happens around the center */
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(90deg);
-    min-width: 100%;
-    min-height: 100%;
-    width: auto;
-    height: auto;
-    z-index: -100;
-    background-size: cover;
+  transform: rotate(90deg); /* Rotate video 90 degrees clockwise */
+  transform-origin: center center; /* Ensure the rotation happens around the center */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(90deg);
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  z-index: -100;
+  background-size: cover;
 }
 
-html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
 
 #guideImage {
-    position: fixed;  /* Fixed position */
-    top: 0;
-    left: 0;
-    width: 100%;      /* Full viewport width */
-    height: 100%;     /* Full viewport height */
-    /* transform: rotate(90deg);  Rotate 90 degrees */
-    transform-origin: center center; /* Rotate around the center */
-    z-index: 10;      /* Above the video layer */
+  position: fixed; /* Fixed position */
+  top: 0;
+  left: 0;
+  width: 100%; /* Full viewport width */
+  height: 100%; /* Full viewport height */
+  /* transform: rotate(90deg);  Rotate 90 degrees */
+  transform-origin: center center; /* Rotate around the center */
+  z-index: 10; /* Above the video layer */
 }
-

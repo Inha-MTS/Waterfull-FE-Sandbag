@@ -3,9 +3,9 @@ import './App.css';
 import Router from './Router';
 
 const App = () => (
-    <>
-        <Router />
-    </>
-)
+  <>
+    <Router />
+  </>
+);
 
 export default App;
