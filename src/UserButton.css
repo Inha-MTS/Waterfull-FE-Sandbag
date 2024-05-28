@@ -1,0 +1,13 @@
+.user-button {
+  width: 495px;
+  height: 101px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.user-button:active {
+  background-color: #ddd;
+}
