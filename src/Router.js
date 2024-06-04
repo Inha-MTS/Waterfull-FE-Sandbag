@@ -1,8 +1,10 @@
 import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
-import Login from './Login';
+import Login from './pages/Login';
 import UserButton from './component/UserButton';
 import Register from './pages/Register';
+import LoginCard from './pages/LoginCard';
+import Tumbler from './pages/Tumbler';
 
 const Router = () => {
   return (
@@ -10,18 +12,8 @@ const Router = () => {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route
-        path="/test-page"
-        element={
-          <UserButton
-            buttonText="테스트"
-            outlineColor="black"
-            onClick={() => {
-              alert('test');
-            }}
-          />
-        }
-      />
+      <Route path="/tumbler" element={<Tumbler />} />
+      <Route path="/test-page" element={<LoginCard />} />
     </Routes>
   );
 };
