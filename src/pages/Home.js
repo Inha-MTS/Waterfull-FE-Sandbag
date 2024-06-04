@@ -2,6 +2,7 @@ import MainText from '../component/MainText';
 import SubText from '../component/SubText';
 import UserButton from '../component/UserButton';
 import { useNavigate } from 'react-router-dom';
+import Stack from 'react-bootstrap/Stack';
 
 function Home() {
   const navigate = useNavigate();
@@ -11,16 +12,22 @@ function Home() {
         <MainText text="반가워요" />
         <SubText text="어떤 방법으로 로그인 하시겠어요?" />
         <div className="buttons">
-          <UserButton
-            firstText="얼굴로"
-            firstOnClick={() => {
-              navigate('/login?how=face');
-            }}
-            secondText="학생증으로"
-            secondOnClick={() => {
-              navigate('/login?how=card');
-            }}
-          />
+          <Stack gap={2} className="col-md-5 mx-auto">
+            <UserButton
+              text="얼굴로"
+              onClick={() => {
+                navigate('/login?how=face');
+              }}
+            />
+            <div style={{ display: 'block', marginTop: '30px' }}></div>
+            <UserButton
+              text="카드로"
+              onClick={() => {
+                navigate('/login?how=card');
+              }}
+              variant="success"
+            />
+          </Stack>
         </div>
         <div className="buttons small">
           <button className="button round">

@@ -6,9 +6,9 @@ function UserInput({ placeholder }) {
       <Form.Control
         type="text"
         id="userInput"
-        aria-describedby="passwordHelpBlock"
         placeholder={placeholder}
         style={{ marginLeft: '30px', width: '70%' }}
+        size="lg"
       />
     </>
   );
