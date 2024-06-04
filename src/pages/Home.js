@@ -1,24 +1,26 @@
-import { Link } from 'react-router-dom';
 import MainText from '../component/MainText';
 import SubText from '../component/SubText';
+import UserButton from '../component/UserButton';
+import { useNavigate } from 'react-router-dom';
 
 function Home() {
+  const navigate = useNavigate();
   return (
     <div className="App">
       <header className="App-header">
         <MainText text="반가워요" />
         <SubText text="어떤 방법으로 로그인 하시겠어요?" />
         <div className="buttons">
-          <Link to="/login?how=face" className="button large">
-            <img src="icon-img/grinning.png" alt="얼굴로 인증하기" />
-            <span className="text">얼굴로</span>
-          </Link>
-          <Link to="/login?how=card" className="button large">
-            {' '}
-            {/* Changed to match the intended route */}
-            <img src="icon-img/credit_card.png" alt="학생증으로 인증하기" />
-            <span className="text">학생증으로</span>
-          </Link>
+          <UserButton
+            firstText="얼굴로"
+            firstOnClick={() => {
+              navigate('/login?how=face');
+            }}
+            secondText="학생증으로"
+            secondOnClick={() => {
+              navigate('/login?how=card');
+            }}
+          />
         </div>
         <div className="buttons small">
           <button className="button round">
