@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom';
+import MainText from '../component/MainText';
+import SubText from '../component/SubText';
 
 function Home() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>반가워요</h1>
-        <p>텀블러 사용을 시작하세요</p>
+        <MainText text="반가워요" />
+        <SubText text="어떤 방법으로 로그인 하시겠어요?" />
         <div className="buttons">
           <Link to="/login?how=face" className="button large">
             <img src="icon-img/grinning.png" alt="얼굴로 인증하기" />

@@ -1,0 +1,15 @@
+.main-text {
+  text-align: left;
+  padding-left: 34px;
+  padding-top: 120px;
+  font-size: 48px;
+  font-weight: 700;
+}
+
+.sub-text {
+   text-align: left;
+  padding-left: 34px;
+  padding-bottom: 100px;
+  font-size: 25px;
+  font-weight: 500; 
+}

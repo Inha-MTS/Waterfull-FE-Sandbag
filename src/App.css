@@ -14,7 +14,6 @@
   background-color: white;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Optional: Adds shadow for better visibility */
 }
@@ -23,7 +22,6 @@
   width: 100%;
   text-align: center; /* Align text to the left */
   padding-left: 20px; /* Add padding to the left to space out the text from the edge */
-  font-size: calc(10px + 2vmin);
   color: black;
 }
 
