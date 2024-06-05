@@ -16,14 +16,14 @@ function Home() {
             <UserButton
               text="얼굴로"
               onClick={() => {
-                navigate('/login?how=face');
+                navigate('/login');
               }}
             />
             <div style={{ display: 'block', marginTop: '30px' }}></div>
             <UserButton
-              text="카드로"
+              text="학생증 바코드로"
               onClick={() => {
-                navigate('/login?how=card');
+                navigate('/login-card');
               }}
               variant="success"
             />
