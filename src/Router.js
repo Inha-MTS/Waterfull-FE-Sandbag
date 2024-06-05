@@ -5,15 +5,19 @@ import UserButton from './component/UserButton';
 import Register from './pages/Register';
 import LoginCard from './pages/LoginCard';
 import Tumbler from './pages/Tumbler';
+import TumblerRek from './pages/TumblerRek';
+import Reward from './pages/Reward';
 
 const Router = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/login-card" element={<LoginCard />} />
       <Route path="/register" element={<Register />} />
       <Route path="/tumbler" element={<Tumbler />} />
-      <Route path="/test-page" element={<LoginCard />} />
+      <Route path="/tumbler-rek" element={<TumblerRek />} />
+      <Route path="/reward" element={<Reward />} />
     </Routes>
   );
 };
