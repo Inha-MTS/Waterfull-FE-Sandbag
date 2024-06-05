@@ -1,8 +1,6 @@
-import axios from 'axios';
 import { BarcodeScanner } from 'react-barcode-scanner';
 import 'react-barcode-scanner/polyfill';
 import { useNavigate } from 'react-router-dom';
-import MainText from '../component/MainText';
 
 const apiURL = ''; // 학번 조회 API URL
 
@@ -19,20 +17,23 @@ function LoginCard() {
           const data = {
             studentId: barcode.rawValue.slice(0, 8),
           };
-          fetch(apiURL, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              console.log(data);
-              const { name, studentId } = data;
-              navigate('/tumbler?name=' + name + '&studentId=' + studentId);
-            })
-            .catch((error) => console.error(error));
+          //   fetch(apiURL, {
+          //     method: 'POST',
+          //     headers: {
+          //       'Content-Type': 'application/json',
+          //     },
+          //     body: JSON.stringify(data),
+          //   })
+          //     .then((response) => response.json())
+          //     .then((data) => {
+          //       console.log(data);
+          //       const { name, studentId } = data;
+          //       navigate('/tumbler?name=' + name + '&studentId=' + studentId);
+          //     })
+          //     .catch((error) => console.error(error));
+          navigate(
+            '/tumbler?name=' + '김건탁' + '&studentId=' + data['studentId'],
+          ); // TODO: Delete this
         }
       }}
     />
