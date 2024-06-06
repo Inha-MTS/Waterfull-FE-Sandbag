@@ -115,6 +115,7 @@ function Register() {
         {index !== 3 && (
           <UserInput placeholder={questions[index]['placeholder']} />
         )}
+        <div style={{ display: 'block', marginTop: '200px' }} />
         {index !== 3 && (
           <Button
             onClick={() => {
@@ -129,7 +130,7 @@ function Register() {
               document.getElementById('userInput').value = '';
             }}
             size="lg"
-            style={{ width: '70%' }}
+            style={{ width: '80%', height: '100px', fontSize: '50px' }}
           >
             다음
           </Button>

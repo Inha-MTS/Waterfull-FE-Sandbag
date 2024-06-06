@@ -49,11 +49,11 @@ function Reward() {
           <SubText text="텀블러 사용에 동참해주셔서 진심으로 감사합니다." />
           <div style={{ display: 'block', marginTop: '200px' }}></div>
           <SubText text="적립된 리워드: 150" />
-          <ProgressBar
+          {/* <ProgressBar
             now={progress}
             label={`메인 페이지로 이동 중...`}
             style={{ display: 'blocked', width: '560px' }}
-          />
+          /> */}
         </header>
       </div>
     </>
