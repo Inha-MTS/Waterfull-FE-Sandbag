@@ -4,6 +4,7 @@ import SubText from '../component/SubText';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Confetti from 'react-confetti';
 import ProgressBar from 'react-bootstrap/ProgressBar';
+import axios from 'axios';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -15,7 +16,10 @@ const Demo = () => {
 
 function Reward() {
   const [progress, setProgress] = useState(0);
+  const [reward, setReward] = useState(100);
   const navigate = useNavigate();
+  const query = useQuery();
+  const studentId = query.get('studentId');
 
   useEffect(() => {
     const delayTimer = setTimeout(() => {
@@ -40,6 +44,24 @@ function Reward() {
     };
   }, [navigate]);
 
+  useEffect(() => {
+    const fetchReward = async () => {
+      try {
+        const response = await axios.get('', {
+          // TODO: 리워드 API URL
+          params: {
+            studentId: studentId,
+          },
+        });
+        setReward(response.data);
+      } catch (error) {
+        console.error('Failed to fetch reward:', error);
+      }
+    };
+
+    fetchReward();
+  }, []);
+
   return (
     <>
       <div className="App">
@@ -48,7 +70,7 @@ function Reward() {
           <MainText text="리워드가 지급되었습니다!" />
           <SubText text="텀블러 사용에 동참해주셔서 진심으로 감사합니다." />
           <div style={{ display: 'block', marginTop: '200px' }}></div>
-          <SubText text="적립된 리워드: 150" />
+          <SubText text={`적립된 리워드: ${reward}`} />
           <ProgressBar
             now={progress}
             label={`메인 페이지로 이동 중...`}
