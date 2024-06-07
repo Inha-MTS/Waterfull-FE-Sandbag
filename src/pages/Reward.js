@@ -38,7 +38,7 @@ function Reward() {
   const query = useQuery();
   const name = query.get('name');
   const studentId = query.get('studentId');
-  const lang = query.get('lang');
+  const lang = query.get('lang') || 'kr';
 
   useEffect(() => {
     const delayTimer = setTimeout(() => {
@@ -66,19 +66,10 @@ function Reward() {
   useEffect(() => {
     const fetchReward = async () => {
       try {
-        const presentRewardResponse = await axios.get('', {
-          // TODO: 리워드 API URL
-          params: {
-            studentId: studentId,
-          },
-        });
-        setReward(presentRewardResponse.data + 100);
-        const addRewardResponse = await axios.get('', {
-          // TODO: 리워드 적립 API URL
-          params: {
-            studentId: studentId,
-          },
-        });
+        const response = await axios.patch(
+          `18.143.140.208:3000/users/${studentId}/point`,
+        );
+        setReward(response.data.point);
       } catch (error) {
         console.error('Failed to fetch reward:', error);
       }
@@ -96,11 +87,6 @@ function Reward() {
           <SubText text={messages[lang]['sub']} />
           <div style={{ display: 'block', marginTop: '200px' }}></div>
           <SubText text={`${name} ${messages[lang]['status']} ${reward}`} />
-          {/* <ProgressBar
-            now={progress}
-            label={`메인 페이지로 이동 중...`}
-            style={{ display: 'blocked', width: '560px' }}
-          /> */}
         </header>
       </div>
     </>
