@@ -15,22 +15,23 @@ function LoginCard() {
           barcode.rawValue.startsWith('2')
         ) {
           const data = {
+            type: 'barcode',
             studentId: barcode.rawValue.slice(0, 8),
           };
-          //   fetch(apiURL, {
-          //     method: 'POST',
-          //     headers: {
-          //       'Content-Type': 'application/json',
-          //     },
-          //     body: JSON.stringify(data),
-          //   })
-          //     .then((response) => response.json())
-          //     .then((data) => {
-          //       console.log(data);
-          //       const { name, studentId } = data;
-          //       navigate('/tumbler?name=' + name + '&studentId=' + studentId);
-          //     })
-          //     .catch((error) => console.error(error));
+          fetch(apiURL, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(data);
+              const { name, studentId } = data;
+              navigate('/tumbler?name=' + name + '&studentId=' + studentId);
+            })
+            .catch((error) => console.error(error));
           navigate(
             '/tumbler?name=' + '김건탁' + '&studentId=' + data['studentId'],
           ); // TODO: Delete this
