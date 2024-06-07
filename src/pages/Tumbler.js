@@ -7,11 +7,27 @@ function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
+const messages = {
+  kr: {
+    main: '텀블러 인식을 시작할게요',
+    sub: '텀블러를 준비해주세요',
+  },
+  en: {
+    main: "Let's start recognizing Tumblr",
+    sub: 'Please prepare Tumblr',
+  },
+  cn: {
+    main: '让我们开始认识 Tumblr',
+    sub: '请准备好 Tumblr',
+  },
+};
+
 function Tumbler() {
   const navigate = useNavigate();
   const query = useQuery();
   const name = query.get('name');
   const studentId = query.get('studentId');
+  const lang = query.get('lang');
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -24,8 +40,8 @@ function Tumbler() {
   return (
     <div className="App">
       <header className="App-header">
-        <MainText text="텀블러 인식을 시작할게요" />
-        <SubText text="텀블러를 준비해주세요" />
+        <MainText text={messages[lang]['main']} />
+        <SubText text={messages[lang]['sub']} />
       </header>
     </div>
   );
