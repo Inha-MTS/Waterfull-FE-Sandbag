@@ -14,25 +14,28 @@ const messages = {
     login: '어떤 방법으로 로그인 하시겠어요?',
     face: '얼굴로',
     card: '학생증 바코드로',
+    register: '회원가입',
   },
   en: {
     welcome: 'Welcome',
     login: 'How would you like to log in?',
     face: 'Face',
     card: 'Student card',
+    register: 'Register',
   },
   cn: {
     welcome: '欢迎',
     login: '您想如何登录？',
     face: '用你的脸',
     card: '使用您的学生证',
+    register: '注册',
   },
 };
 
 function Home() {
   const navigate = useNavigate();
   const query = useQuery();
-  const lang = query.get('lang');
+  const lang = query.get('lang') || 'kr';
   return (
     <div className="App">
       <header className="App-header">
@@ -53,6 +56,14 @@ function Home() {
                 navigate('/login-card?lang=' + lang);
               }}
               variant="success"
+            />
+            <div style={{ display: 'block', marginTop: '30px' }}></div>
+            <UserButton
+              text={messages[lang]['register']}
+              onClick={() => {
+                navigate('/register?lang=' + lang);
+              }}
+              variant="secondary"
             />
           </Stack>
         </div>
