@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import MainText from '../component/MainText';
 import SubText from '../component/SubText';
 import UserInput from '../component/UserInput';
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
 import { Button } from 'react-bootstrap';
 import { useNavigate, useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -24,8 +27,8 @@ const messages = {
       input: true,
     },
     {
-      mainText: '학과를 입력해주세요',
-      subText: '학과명을 줄이지 말고 입력해주세요',
+      mainText: '학과를 선택해주세요',
+      subText: '학부 / 학과를 선택해주시면 됩니다',
       placeholder: '컴퓨터공학과',
       input: true,
     },
@@ -53,8 +56,8 @@ const messages = {
       input: true,
     },
     {
-      mainText: 'Please enter your department',
-      subText: 'Please enter your department',
+      mainText: 'Please select your department',
+      subText: 'Please select your faculty/department',
       placeholder: 'Computer Science',
       input: true,
     },
@@ -82,8 +85,8 @@ const messages = {
       input: true,
     },
     {
-      mainText: '请输入您的系',
-      subText: '请输入您的系',
+      mainText: '请选择您所在的部门',
+      subText: '请选择您所在的学院/系',
       placeholder: '计算机科学系',
       input: true,
     },
@@ -169,12 +172,39 @@ function Register() {
   const [name, setName] = useState('');
   const [studentId, setStudentId] = useState('');
   const [department, setDepartment] = useState('');
+  const [data, setData] = useState([]); // 학과 정보 저장할 변수
   const query = useQuery();
-  const lang = query.get('lang');
+  const lang = query.get('lang') || 'kr';
   const navigate = useNavigate();
+
   useEffect(() => {
     console.log(inputValue);
   }, [inputValue]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://18.143.140.208:3000/majors', {
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+          },
+        });
+        const groupedData = response.data.reduce((acc, item) => {
+          if (!acc[item.department]) {
+            acc[item.department] = [];
+          }
+          acc[item.department].push(item.name);
+          return acc;
+        }, {});
+        setData(groupedData);
+        console.log(groupedData);
+      } catch (error) {
+        console.error('Failed to fetch data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div className="App">
@@ -185,7 +215,20 @@ function Register() {
           <UserInput placeholder={messages[lang][index]['placeholder']} />
         )}
         {index === 2 && (
-          <UserInput placeholder={messages[lang][index]['placeholder']} />
+          <>
+            <DropdownButton id="dropdown-item-button" title="Dropdown button">
+              <Dropdown.ItemText>학부 선택</Dropdown.ItemText>
+              <Dropdown.Item as="button">Action</Dropdown.Item>
+              <Dropdown.Item as="button">Another action</Dropdown.Item>
+              <Dropdown.Item as="button">Something else</Dropdown.Item>
+            </DropdownButton>
+            <DropdownButton id="dropdown-item-button" title="Dropdown button">
+              <Dropdown.ItemText>학과 선택</Dropdown.ItemText>
+              <Dropdown.Item as="button">Action</Dropdown.Item>
+              <Dropdown.Item as="button">Another action</Dropdown.Item>
+              <Dropdown.Item as="button">Something else</Dropdown.Item>
+            </DropdownButton>
+          </>
         )}
         <div style={{ display: 'block', marginTop: '200px' }} />
         {index !== 3 && (
