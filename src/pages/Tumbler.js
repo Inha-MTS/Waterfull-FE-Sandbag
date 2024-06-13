@@ -7,25 +7,50 @@ function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
+const messages = {
+  kr: {
+    main: '안녕하세요 ',
+    sub: '텀블러 인식을 시작할게요',
+  },
+  en: {
+    main: 'Hi ',
+    sub: 'Getting ready for Tumblr',
+  },
+  cn: {
+    main: '你好 ',
+    sub: '请准备好 Tumblr',
+  },
+};
+
 function Tumbler() {
   const navigate = useNavigate();
   const query = useQuery();
   const name = query.get('name');
   const studentId = query.get('studentId');
+  const lang = query.get('lang');
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigate('/tumbler-rek?name=' + name + '&studentId=' + studentId);
+      navigate(
+        '/tumbler-rek?name=' +
+          name +
+          '&studentId=' +
+          studentId +
+          '&lang=' +
+          lang,
+      );
     }, 3000);
 
     return () => clearTimeout(timer); // 컴포넌트가 언마운트되면 타이머를 제거
-  }, [navigate]);
+  }, [navigate, name, studentId]);
 
   return (
     <div className="App">
       <header className="App-header">
-        <MainText text="텀블러 인식을 시작할게요" />
-        <SubText text="텀블러를 준비해주세요" />
+        <MainText
+          text={messages[lang]['main'] + name + (lang === 'kr' ? '님' : '')}
+        />
+        <SubText text={messages[lang]['sub']} />
       </header>
     </div>
   );
