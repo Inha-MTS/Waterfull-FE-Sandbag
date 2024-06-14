@@ -21,6 +21,7 @@ function LoginCard() {
           barcode.rawValue.startsWith('2')
         ) {
           const data = {
+            type: 'card',
             id: barcode.rawValue.slice(0, 8),
           };
           try {
