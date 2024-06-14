@@ -36,16 +36,10 @@ function LoginCard() {
             const { status, message, data: resData } = response;
             if (status === 200) {
               navigate(
-                '/tumbler?name=' +
-                  resData.name +
-                  '&studentId=' +
-                  resData.id +
-                  '&lang=' +
-                  lang,
+                `/tumbler?name=${resData.name}&studentId=${resData.id}&lang=${lang}`,
               );
             } else if (status === 401) {
-              // 등록되지 않은 사용자
-              navigate('/register?lang=' + lang);
+              navigate(`/register?lang=${lang}`);
             }
             alert(message);
           } catch (error) {

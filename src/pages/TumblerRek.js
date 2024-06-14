@@ -1,6 +1,18 @@
 import React, { useEffect, useRef } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+
+const apiURL = `${process.env.REACT_APP_BACKEND_URL}/bottles/category`;
+
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
 
 function TumblerRek() {
+  const navigate = useNavigate();
+  const query = useQuery();
+  const name = query.get('name');
+  const studentId = query.get('studentId');
+  const lang = query.get('lang');
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
 
@@ -27,53 +39,57 @@ function TumblerRek() {
     };
   }, []);
 
-  useEffect(() => {
-    const captureVideo = async () => {
+  const capturePhoto = async () => {
+    if (videoRef.current && canvasRef.current) {
+      const context = canvasRef.current.getContext('2d');
+      context.drawImage(
+        videoRef.current,
+        0,
+        0,
+        canvasRef.current.width,
+        canvasRef.current.height,
+      );
+      const dataUrl = canvasRef.current.toDataURL('image/jpeg');
+      const imageString = dataUrl.split(',')[1];
+
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: true,
+        const rawResponse = await fetch(apiURL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ image: imageString }),
         });
-        videoRef.current.srcObject = stream;
-        let chunks = [];
-        const recorder = new MediaRecorder(stream);
-
-        recorder.ondataavailable = (e) => chunks.push(e.data);
-        recorder.onstop = async () => {
-          const blob = new Blob(chunks, { type: 'video/mp4' });
-          chunks = [];
-
-          const response = await fetch(
-            '', // TODO: Tumbler Rekognition API URL
-            {
-              method: 'POST',
-              body: blob,
-              headers: {
-                'Content-Type': 'video/mp4',
-              },
-            },
+        const response = await rawResponse.json();
+        const {
+          status,
+          data: { category },
+        } = response;
+        if (status === 200 && category === 'tumbler') {
+          return navigate(
+            `/reward?name=${name}&studentId=${studentId}&lang=${lang}`,
           );
-
-          if (!response.ok) {
-            console.log(response);
-            throw new Error('Video upload failed');
-          }
-
-          // 스트림 정리
-          stream.getTracks().forEach((track) => track.stop());
-        };
-
-        recorder.start();
-        // 5초 후 녹화 중지
-        setTimeout(() => {
-          recorder.stop();
-        }, 5000);
+        } else if (status === 204 && category === 'tumbler') {
+          alert('텀블러 사진 재촬영이 필요합니다'); // TODO: 건탁 - 팝업에서 다른 메세지로 바꾸기
+          return navigate(
+            `/tumbler-rek?name=${name}&studentId=${studentId}&lang=${lang}`,
+          );
+        }
+        alert('텀블러를 사용하세요!');
+        return navigate('/'); // Redirect to the home page temporarily
       } catch (error) {
-        console.error('Error capturing video:', error);
+        console.error('Error uploading image:', error);
       }
-    };
+    }
+  };
 
-    captureVideo();
-  }, []);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      capturePhoto();
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  });
 
   return (
     <div style={{ position: 'relative' }}>
