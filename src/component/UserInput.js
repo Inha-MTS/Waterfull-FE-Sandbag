@@ -7,7 +7,12 @@ function UserInput({ placeholder }) {
         type="text"
         id="userInput"
         placeholder={placeholder}
-        style={{ marginLeft: '30px', width: '70%' }}
+        style={{
+          height: '100px',
+          width: '80%',
+          marginLeft: '10%',
+          marginTop: '10%',
+        }}
         size="lg"
       />
     </>
