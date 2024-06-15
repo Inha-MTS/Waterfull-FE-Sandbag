@@ -86,7 +86,7 @@ function TumblerRek() {
   useEffect(() => {
     const timer = setTimeout(() => {
       capturePhoto();
-    }, 3000);
+    }, 2000);
 
     return () => clearTimeout(timer);
   });

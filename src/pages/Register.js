@@ -6,7 +6,8 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import { Button } from 'react-bootstrap';
 import { useNavigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
+import translate from 'translate';
+import _ from 'lodash';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -41,6 +42,10 @@ const messages = {
       input: false,
     },
     '다음',
+    {
+      department: '학부 선택',
+      major: '학과 선택',
+    },
   ],
   en: [
     {
@@ -70,6 +75,10 @@ const messages = {
       input: false,
     },
     'Next',
+    {
+      department: 'Select Department',
+      major: 'Select Major',
+    },
   ],
   cn: [
     {
@@ -99,105 +108,128 @@ const messages = {
       input: false,
     },
     '下一个',
+    {
+      department: '选择部门',
+      major: '选择专业',
+    },
   ],
 };
 
-function RegisterCamera(name, studentId, department, navigate) {
-  // 카메라 호출 및 얼굴 등록
-  const apiURL = ''; // 가입 API URL
-  const faceRegisterApiURL = ''; // 얼굴 등록 API URL
-  const data = {
-    name: name,
-    studentId: studentId,
-    department: department,
-    face: false, // 얼굴 등록 하기로 했다~
-  };
-  fetch(apiURL, {
-    //
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-      // 얼굴 등록 API 호출
-      fetch(apiURL, {
+async function RegisterUser(
+  name,
+  studentId,
+  major,
+  lang,
+  navigate,
+  registerFace,
+) {
+  try {
+    const registeredUserRaw = await fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/users`,
+      {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
-          navigate('/tumbler?name=' + name + '&studentId=' + studentId);
-        })
-        .catch((error) => console.error(error));
-      navigate('/tumbler?name=' + name + '&studentId=' + studentId);
-    })
-    .catch((error) => console.error(error));
+        body: JSON.stringify({
+          name,
+          id: studentId,
+          major,
+        }),
+      },
+    );
+    const registeredUser = await registeredUserRaw.json();
+    if (registeredUser.status === 201 && registerFace)
+      return navigate(`/register-face?studentId=${studentId}&lang=${lang}`);
+
+    return navigate(
+      `/tumbler?name=${name}&studentId=${studentId}&lang=${lang}`,
+    );
+  } catch (error) {
+    console.error(error);
+  }
 }
 
-function RegisterNotCamera(name, studentId, department, navigate) {
-  const apiURL = ''; // 가입 API URL
-  const data = {
-    name: name,
-    studentId: studentId,
-    department: department,
-    face: false, // 얼굴 등록 안하기로 했다~
-  };
-  // fetch(apiURL, {
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //   },
-  //   body: JSON.stringify(data),
-  // })
-  //   .then((response) => response.json())
-  //   .then((data) => {
-  //     console.log(data);
-  //     navigate('/tumbler?name=' + name + '&studentId=' + studentId);
-  //   })
-  //   .catch((error) => console.error(error));
-  navigate('/tumbler?name=' + name + '&studentId=' + studentId);
+async function RegisterUserFaceImage(id, lang, navigate) {
+  const registeredFaceRaw = await fetch(
+    `${process.env.REACT_APP_BACKEND_URL}/face-image`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id, image: 'temp' }),
+    },
+  );
+  const registeredFace = await registeredFaceRaw.json();
+  const {
+    data: { name },
+  } = registeredFace;
+  if (registeredFace.status === 201) {
+    return navigate(`/tumbler?name=${name}&studentId=${id}&lang=${lang}`);
+  }
 }
 
 function Register() {
-  const [index, setIndex] = useState(0);
-  const [inputValue, setInputValue] = useState('');
-  const [name, setName] = useState('');
-  const [studentId, setStudentId] = useState('');
-  const [department, setDepartment] = useState('');
-  const [data, setData] = useState([]); // 학과 정보 저장할 변수
   const query = useQuery();
   const lang = query.get('lang') || 'kr';
+  const [index, setIndex] = useState(0);
+  const [, setInputValue] = useState('');
+  const [selectedDepartment, setSelectedDepartment] = useState(null);
+  const [selectedMajor, setSelectedMajor] = useState(null);
+  const [departmentTitle, setDepartmentTitle] = useState(
+    messages[lang][5].department,
+  );
+  const [majorTitle, setMajorTitle] = useState(messages[lang][5].major);
+  const [name, setName] = useState('');
+  const [studentId, setStudentId] = useState('');
+  const [major, setMajor] = useState('');
+  const [majorList, setMajorList] = useState({});
   const navigate = useNavigate();
-
-  useEffect(() => {
-    console.log(inputValue);
-  }, [inputValue]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://18.143.140.208:3000/majors', {
-          headers: {
-            'Access-Control-Allow-Origin': '*',
+        const rawResponse = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/majors`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
           },
-        });
-        const groupedData = response.data.reduce((acc, item) => {
-          if (!acc[item.department]) {
-            acc[item.department] = [];
-          }
-          acc[item.department].push(item.name);
-          return acc;
-        }, {});
-        setData(groupedData);
-        console.log(groupedData);
+        );
+        const response = await rawResponse.json();
+
+        const translateObjectStrings = async (obj) => {
+          const entries = await Promise.all(
+            Object.entries(obj).map(async ([key, value]) => {
+              const translatedKey = await translate(key, {
+                from: 'ko',
+                to: lang,
+              });
+
+              const translatedValue = await Promise.all(
+                value.map(async (item) => {
+                  const translatedName = await translate(item.name, {
+                    from: 'ko',
+                    to: lang,
+                  });
+                  return { ...item, name: translatedName };
+                }),
+              );
+
+              return [translatedKey, translatedValue];
+            }),
+          );
+          return _.fromPairs(entries);
+        };
+        const majorList =
+          lang === 'kr'
+            ? response.data
+            : await translateObjectStrings(response.data);
+
+        setMajorList(majorList);
       } catch (error) {
         console.error('Failed to fetch data:', error);
       }
@@ -205,6 +237,22 @@ function Register() {
 
     fetchData();
   }, []);
+
+  const handleDepartment = (department) => {
+    setSelectedDepartment(department);
+    setDepartmentTitle(department);
+    setSelectedMajor(null); // Reset selected major when department changes
+    setMajorTitle(messages[lang][5].major); // Reset major title when department changes
+  };
+
+  const handleMajor = (major) => {
+    setSelectedMajor(major.id);
+    setMajorTitle(major.name);
+  };
+
+  const getMajorsForDepartment = (department) => {
+    return majorList[department] || [];
+  };
 
   return (
     <div className="App">
@@ -216,17 +264,32 @@ function Register() {
         )}
         {index === 2 && (
           <>
-            <DropdownButton id="dropdown-item-button" title="Dropdown button">
-              <Dropdown.ItemText>학부 선택</Dropdown.ItemText>
-              <Dropdown.Item as="button">Action</Dropdown.Item>
-              <Dropdown.Item as="button">Another action</Dropdown.Item>
-              <Dropdown.Item as="button">Something else</Dropdown.Item>
+            <DropdownButton
+              id="dropdown-department-button"
+              title={departmentTitle}
+            >
+              {Object.keys(majorList).map((department) => (
+                <Dropdown.Item
+                  as="button"
+                  key={department}
+                  onClick={() => handleDepartment(department)}
+                >
+                  {department}
+                </Dropdown.Item>
+              ))}
             </DropdownButton>
-            <DropdownButton id="dropdown-item-button" title="Dropdown button">
-              <Dropdown.ItemText>학과 선택</Dropdown.ItemText>
-              <Dropdown.Item as="button">Action</Dropdown.Item>
-              <Dropdown.Item as="button">Another action</Dropdown.Item>
-              <Dropdown.Item as="button">Something else</Dropdown.Item>
+
+            <DropdownButton id="dropdown-major-button" title={majorTitle}>
+              {selectedDepartment &&
+                getMajorsForDepartment(selectedDepartment).map((major) => (
+                  <Dropdown.Item
+                    as="button"
+                    key={major.name}
+                    onClick={() => handleMajor(major)}
+                  >
+                    {major.name}
+                  </Dropdown.Item>
+                ))}
             </DropdownButton>
           </>
         )}
@@ -234,39 +297,38 @@ function Register() {
         {index !== 3 && (
           <Button
             onClick={() => {
-              setInputValue(document.getElementById('userInput').value);
+              setInputValue(document.getElementById('userInput')?.value);
               if (index === 0)
                 setName(document.getElementById('userInput').value);
               else if (index === 1)
                 setStudentId(document.getElementById('userInput').value);
-              else if (index === 2)
-                setDepartment(document.getElementById('userInput').value);
+              else if (index === 2) setMajor(selectedMajor);
               setIndex(index + 1);
-              document.getElementById('userInput').value = '';
+              if (index !== 2) document.getElementById('userInput').value = '';
             }}
             size="lg"
             style={{ width: '80%', height: '100px', fontSize: '50px' }}
           >
             {messages[lang][4]}
-          </Button>
+          </Button> // 다음 버튼
         )}
         {index === 3 && (
-          <Button
-            onClick={() => {
-              RegisterCamera(name, studentId, department, navigate);
-            }}
-          >
-            {messages[lang][index]['ok']}
-          </Button>
-        )}
-        {index === 3 && (
-          <Button
-            onClick={() => {
-              RegisterNotCamera(name, studentId, department, navigate);
-            }}
-          >
-            {messages[lang][index]['cancel']}
-          </Button>
+          <>
+            <Button
+              onClick={() => {
+                RegisterUser(name, studentId, major, lang, navigate, true);
+              }}
+            >
+              {messages[lang][index]['ok']}
+            </Button>
+            <Button
+              onClick={() => {
+                RegisterUser(name, studentId, major, lang, navigate, false);
+              }}
+            >
+              {messages[lang][index]['cancel']}
+            </Button>
+          </>
         )}
       </header>
     </div>
