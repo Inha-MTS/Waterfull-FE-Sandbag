@@ -3,7 +3,6 @@ import MainText from '../component/MainText';
 import SubText from '../component/SubText';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Confetti from 'react-confetti';
-import axios from 'axios';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -66,9 +65,16 @@ function Reward() {
   useEffect(() => {
     const fetchReward = async () => {
       try {
-        const response = await axios.patch(
-          `${process.env.BACKEND_URL}/users/${studentId}/point`,
+        const rawResponse = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/users/${studentId}/point`,
+          {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
         );
+        const response = await rawResponse.json();
         setReward(response.data.point);
       } catch (error) {
         console.error('Failed to fetch reward:', error);
