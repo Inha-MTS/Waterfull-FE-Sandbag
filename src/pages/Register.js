@@ -115,7 +115,14 @@ const messages = {
   ],
 };
 
-async function RegisterUser(name, studentId, major, navigate, registerFace) {
+async function RegisterUser(
+  name,
+  studentId,
+  major,
+  lang,
+  navigate,
+  registerFace,
+) {
   try {
     const registeredUserRaw = await fetch(
       `${process.env.REACT_APP_BACKEND_URL}/users`,
@@ -132,26 +139,34 @@ async function RegisterUser(name, studentId, major, navigate, registerFace) {
       },
     );
     const registeredUser = await registeredUserRaw.json();
-    let navigateStatus = registeredUser.status;
-    if (registeredUser.status === 200 && registerFace) {
-      const registeredFaceRaw = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/face-image`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ id: registeredUser.data.id, image: 'temp' }),
-        },
-      );
-      const registeredFace = await registeredFaceRaw.data.json();
-      navigateStatus = registeredFace.status;
-    }
-    if (navigateStatus === 200) {
-      return navigate(`/tumbler?name=${name}&studentId=${studentId}`);
-    }
+    if (registeredUser.status === 201 && registerFace)
+      return navigate(`/register-face?studentId=${studentId}&lang=${lang}`);
+
+    return navigate(
+      `/tumbler?name=${name}&studentId=${studentId}&lang=${lang}`,
+    );
   } catch (error) {
     console.error(error);
+  }
+}
+
+async function RegisterUserFaceImage(id, lang, navigate) {
+  const registeredFaceRaw = await fetch(
+    `${process.env.REACT_APP_BACKEND_URL}/face-image`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id, image: 'temp' }),
+    },
+  );
+  const registeredFace = await registeredFaceRaw.json();
+  const {
+    data: { name },
+  } = registeredFace;
+  if (registeredFace.status === 201) {
+    return navigate(`/tumbler?name=${name}&studentId=${id}&lang=${lang}`);
   }
 }
 
@@ -301,14 +316,14 @@ function Register() {
           <>
             <Button
               onClick={() => {
-                RegisterUser(name, studentId, major, navigate, true);
+                RegisterUser(name, studentId, major, lang, navigate, true);
               }}
             >
               {messages[lang][index]['ok']}
             </Button>
             <Button
               onClick={() => {
-                RegisterUser(name, studentId, major, navigate, false);
+                RegisterUser(name, studentId, major, lang, navigate, false);
               }}
             >
               {messages[lang][index]['cancel']}

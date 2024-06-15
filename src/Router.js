@@ -7,6 +7,7 @@ import LoginCard from './pages/LoginCard';
 import Tumbler from './pages/Tumbler';
 import TumblerRek from './pages/TumblerRek';
 import Reward from './pages/Reward';
+import RegisterFace from './pages/RegisterFace';
 
 const Router = () => {
   return (
@@ -18,6 +19,7 @@ const Router = () => {
       <Route path="/tumbler" element={<Tumbler />} />
       <Route path="/tumbler-rek" element={<TumblerRek />} />
       <Route path="/reward" element={<Reward />} />
+      <Route path="/register-face" element={<RegisterFace />} />
     </Routes>
   );
 };
