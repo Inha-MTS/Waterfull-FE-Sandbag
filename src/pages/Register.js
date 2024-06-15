@@ -6,6 +6,8 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import { Button } from 'react-bootstrap';
 import { useNavigate, useLocation } from 'react-router-dom';
+import translate from 'translate';
+import _ from 'lodash';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -183,7 +185,36 @@ function Register() {
           },
         );
         const response = await rawResponse.json();
-        setMajorList(response.data);
+
+        const translateObjectStrings = async (obj) => {
+          const entries = await Promise.all(
+            Object.entries(obj).map(async ([key, value]) => {
+              const translatedKey = await translate(key, {
+                from: 'ko',
+                to: lang,
+              });
+
+              const translatedValue = await Promise.all(
+                value.map(async (item) => {
+                  const translatedName = await translate(item.name, {
+                    from: 'ko',
+                    to: lang,
+                  });
+                  return { ...item, name: translatedName };
+                }),
+              );
+
+              return [translatedKey, translatedValue];
+            }),
+          );
+          return _.fromPairs(entries);
+        };
+        const majorList =
+          lang === 'kr'
+            ? response.data
+            : await translateObjectStrings(response.data);
+
+        setMajorList(majorList);
       } catch (error) {
         console.error('Failed to fetch data:', error);
       }
