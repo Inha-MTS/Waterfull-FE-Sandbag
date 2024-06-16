@@ -61,6 +61,7 @@ const Login = () => {
           `/tumbler?name=${resData.name}&studentId=${resData.id}&lang=${lang}`,
         );
       } else if (status === 401) {
+        alert('가입되지 않은 사용자입니다. 회원가입 페이지로 이동합니다.');
         return navigate(`/register?lang=${lang}`);
       }
       alert(message);
