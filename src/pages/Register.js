@@ -139,6 +139,11 @@ async function RegisterUser(
       },
     );
     const registeredUser = await registeredUserRaw.json();
+
+    if (registeredUser.status === 409) {
+      alert('이미 가입된 사용자입니다. 홈 화면으로 이동합니다.');
+      return navigate('/');
+    }
     if (registeredUser.status === 201 && registerFace)
       return navigate(`/register-face?studentId=${studentId}&lang=${lang}`);
 
@@ -147,26 +152,6 @@ async function RegisterUser(
     );
   } catch (error) {
     console.error(error);
-  }
-}
-
-async function RegisterUserFaceImage(id, lang, navigate) {
-  const registeredFaceRaw = await fetch(
-    `${process.env.REACT_APP_BACKEND_URL}/face-image`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ id, image: 'temp' }),
-    },
-  );
-  const registeredFace = await registeredFaceRaw.json();
-  const {
-    data: { name },
-  } = registeredFace;
-  if (registeredFace.status === 201) {
-    return navigate(`/tumbler?name=${name}&studentId=${id}&lang=${lang}`);
   }
 }
 
