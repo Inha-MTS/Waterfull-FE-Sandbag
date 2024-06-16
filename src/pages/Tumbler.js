@@ -42,7 +42,7 @@ function Tumbler() {
     }, 3000);
 
     return () => clearTimeout(timer); // 컴포넌트가 언마운트되면 타이머를 제거
-  }, [navigate, name, studentId]);
+  }, [navigate, name, studentId, lang]);
 
   return (
     <div className="App">
