@@ -3,6 +3,8 @@ import SubText from '../component/SubText';
 import UserButton from '../component/UserButton';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Stack from 'react-bootstrap/Stack';
+import { Alert } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -36,8 +38,35 @@ function Home() {
   const navigate = useNavigate();
   const query = useQuery();
   const lang = query.get('lang') || 'kr';
+  const code = query.get('code') || '0';
+  const [showAlert, setShowAlert] = useState(false);
+  const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    if (code !== '0') {
+      // 뭔가 보여줘야 함
+      if (code === '1') {
+        setMessage('얼굴 인식에 실패하였습니다. 다시 시도해주세요.');
+        console.log(message);
+      } else if (code === '2') {
+        setMessage('텀블러 인식에 실패하였습니다. 다시 시도해주세요.');
+      }
+      setShowAlert(true);
+      const timer = setTimeout(() => {
+        setShowAlert(false);
+      }, 8000); // 10초 후에 showAlert를 false로 설정하여 Alert를 숨깁니다.
+
+      return () => clearTimeout(timer); // 컴포넌트가 언마운트될 때 타이머를 정리합니다.
+    }
+  }, [message]); // message 상태가 변경될 때마다 이 useEffect가 실행됩니다.
+
   return (
     <div className="App">
+      {showAlert && (
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0 }}>
+          <Alert variant="danger">{message}</Alert>
+        </div>
+      )}
       <header className="App-header">
         <MainText text={messages[lang]['welcome']} />
         <SubText text={messages[lang]['login']} />
