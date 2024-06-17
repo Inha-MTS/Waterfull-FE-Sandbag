@@ -38,7 +38,7 @@ async function HandleFaceImage(imageString) {
 const Login = () => {
   const navigate = useNavigate();
   const query = useQuery();
-  const lang = query.get('lang');
+  const lang = query.get('lang') || 'kr';
 
   const [photoTaken, setPhotoTaken] = useState(false);
   const detectionRef = useRef(null);
@@ -61,7 +61,6 @@ const Login = () => {
           `/tumbler?name=${resData.name}&studentId=${resData.id}&lang=${lang}`,
         );
       } else if (status === 401) {
-        alert('가입되지 않은 사용자입니다. 회원가입 페이지로 이동합니다.');
         return navigate(`/register?lang=${lang}`);
       }
       alert(message);
