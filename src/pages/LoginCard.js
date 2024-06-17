@@ -11,7 +11,7 @@ function useQuery() {
 function LoginCard() {
   const navigate = useNavigate();
   const query = useQuery();
-  const lang = query.get('lang');
+  const lang = query.get('lang') || 'kr';
   return (
     <BarcodeScanner
       options={{ formats: ['code_39'] }}
