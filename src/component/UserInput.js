@@ -1,6 +1,6 @@
 import Form from 'react-bootstrap/Form';
 
-function UserInput({ placeholder }) {
+function UserInput({ placeholder, onChange }) {
   return (
     <>
       <Form.Control
@@ -14,6 +14,7 @@ function UserInput({ placeholder }) {
           marginTop: '10%',
         }}
         size="lg"
+        onChange={onChange}
       />
     </>
   );

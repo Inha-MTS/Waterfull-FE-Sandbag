@@ -171,6 +171,7 @@ function Register() {
   const [studentId, setStudentId] = useState('');
   const [major, setMajor] = useState('');
   const [majorList, setMajorList] = useState({});
+  const Hangul = require('hangul-js');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -247,7 +248,12 @@ function Register() {
         <MainText text={messages[lang][index]['mainText']} />
         <SubText text={messages[lang][index]['subText'].replace('{}', name)} />
         {index < 2 && (
-          <UserInput placeholder={messages[lang][index]['placeholder']} />
+          <UserInput
+            placeholder={messages[lang][index]['placeholder']}
+            onChange={() => {
+              Hangul.assemble(document.getElementById('userInput').value);
+            }}
+          />
         )}
         {index === 2 && (
           <>
