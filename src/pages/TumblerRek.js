@@ -14,7 +14,8 @@ function TumblerRek() {
   const studentId = query.get('studentId');
   const lang = query.get('lang') || 'kr';
   const videoRef = useRef(null);
-  const canvasRef = useRef(null);
+  const captureCanvasRef = useRef(null);
+  const guideCanvasRef = useRef(null);
 
   useEffect(() => {
     async function enableStream() {
@@ -39,17 +40,37 @@ function TumblerRek() {
     };
   }, []);
 
+  useEffect(() => {
+    if (guideCanvasRef.current) {
+      const context = guideCanvasRef.current.getContext('2d');
+      const { width, height } = guideCanvasRef.current;
+
+      // Clear the canvas
+      context.clearRect(0, 0, width, height);
+
+      // Draw a rectangle guideline in the center of the canvas
+      const rectWidth = 200;
+      const rectHeight = 300;
+      const rectX = (width - rectWidth) / 2;
+      const rectY = (height - rectHeight) / 2;
+
+      context.strokeStyle = 'red';
+      context.lineWidth = 2;
+      context.strokeRect(rectX, rectY, rectWidth, rectHeight);
+    }
+  }, [guideCanvasRef]);
+
   const capturePhoto = async () => {
-    if (videoRef.current && canvasRef.current) {
-      const context = canvasRef.current.getContext('2d');
+    if (videoRef.current && captureCanvasRef.current) {
+      const context = captureCanvasRef.current.getContext('2d');
       context.drawImage(
         videoRef.current,
         0,
         0,
-        canvasRef.current.width,
-        canvasRef.current.height,
+        captureCanvasRef.current.width,
+        captureCanvasRef.current.height,
       );
-      const dataUrl = canvasRef.current.toDataURL('image/jpeg');
+      const dataUrl = captureCanvasRef.current.toDataURL('image/jpeg');
       const imageString = dataUrl.split(',')[1];
 
       try {
@@ -92,14 +113,46 @@ function TumblerRek() {
   });
 
   return (
-    <div style={{ position: 'relative' }}>
-      <video ref={videoRef} autoPlay playsInline />
-      <canvas
-        ref={canvasRef}
-        style={{ display: 'none' }}
-        width={640}
-        height={480}
-      />
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+      }}
+    >
+      <div style={{ position: 'relative', width: 640, height: 480 }}>
+        <video
+          ref={videoRef}
+          autoPlay
+          playsInline
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+          }}
+        />
+        <canvas
+          ref={guideCanvasRef}
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+          }}
+          width={640}
+          height={480}
+        />
+        <canvas
+          ref={captureCanvasRef}
+          style={{ display: 'none' }}
+          width={640}
+          height={480}
+        />
+      </div>
     </div>
   );
 }
