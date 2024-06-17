@@ -251,7 +251,9 @@ function Register() {
           <UserInput
             placeholder={messages[lang][index]['placeholder']}
             onChange={() => {
-              Hangul.assemble(document.getElementById('userInput').value);
+              document.getElementById('userInput').value = Hangul.assemble(
+                document.getElementById('userInput').value,
+              );
             }}
           />
         )}
