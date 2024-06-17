@@ -38,7 +38,7 @@ function LoginCard() {
               navigate(
                 `/tumbler?name=${resData.name}&studentId=${resData.id}&lang=${lang}`,
               );
-            } else if (status === 401) {
+            } else if (status === 401 || 404) {
               alert(
                 '가입되지 않은 사용자입니다. 회원가입 페이지로 이동합니다.',
               );

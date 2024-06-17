@@ -60,7 +60,7 @@ const Login = () => {
         return navigate(
           `/tumbler?name=${resData.name}&studentId=${resData.id}&lang=${lang}`,
         );
-      } else if (status === 401) {
+      } else if (status === 401 || 404) {
         return navigate(`/register?lang=${lang}`);
       }
       alert(message);
