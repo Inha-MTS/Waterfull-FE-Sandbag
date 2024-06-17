@@ -12,14 +12,14 @@ const messages = {
   kr: {
     welcome: '반가워요',
     login: '어떤 방법으로 로그인 하시겠어요?',
-    face: '얼굴로',
-    card: '학생증 바코드로',
+    face: '얼굴 인식',
+    card: '학생증 바코드 인식',
     register: '회원가입',
   },
   en: {
     welcome: 'Welcome',
     login: 'How would you like to log in?',
-    face: 'Face',
+    face: 'Face Recognition',
     card: 'Student card',
     register: 'Register',
   },

@@ -1,5 +1,4 @@
 import Button from 'react-bootstrap/Button';
-import Stack from 'react-bootstrap/Stack';
 
 function UserButton({ text, onClick, variant }) {
   return (
