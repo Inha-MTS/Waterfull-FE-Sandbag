@@ -23,7 +23,7 @@ const messages = {
       input: true,
     },
     {
-      mainText: '학번을 입력해주세요',
+      mainText: '안녕하세요 {} 님',
       subText: '8자리의 학번을 입력해주세요',
       placeholder: '12201830',
       input: true,
@@ -56,7 +56,7 @@ const messages = {
       input: true,
     },
     {
-      mainText: 'Please enter your student ID',
+      mainText: 'Hi {}',
       subText: 'Please enter your 8-digit student ID',
       placeholder: '12201830',
       input: true,
@@ -89,7 +89,7 @@ const messages = {
       input: true,
     },
     {
-      mainText: '请输入您的学号',
+      mainText: '嗨， {}',
       subText: '请输入您的8位学号',
       placeholder: '12201830',
       input: true,
@@ -245,7 +245,7 @@ function Register() {
       <Close />
       <header className="App-header">
         <MainText text={messages[lang][index]['mainText']} />
-        <SubText text={messages[lang][index]['subText']} />
+        <SubText text={messages[lang][index]['subText'].replace('{}', name)} />
         {index < 2 && (
           <UserInput placeholder={messages[lang][index]['placeholder']} />
         )}
@@ -291,9 +291,15 @@ function Register() {
           <Button
             onClick={() => {
               setInputValue(document.getElementById('userInput')?.value);
-              if (index === 0)
+              if (index === 0) {
                 setName(document.getElementById('userInput').value);
-              else if (index === 1)
+                messages[lang][index + 1]['mainText'] = messages[lang][
+                  index + 1
+                ]['mainText'].replace(
+                  '{}',
+                  document.getElementById('userInput').value,
+                );
+              } else if (index === 1)
                 setStudentId(document.getElementById('userInput').value);
               else if (index === 2) setMajor(selectedMajor);
               setIndex(index + 1);
