@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import './TumblerRek.css'; // Create a CSS file to handle dynamic styles
 
 const apiURL = `${process.env.REACT_APP_BACKEND_URL}/bottles/category`;
 
@@ -113,36 +114,12 @@ function TumblerRek() {
   });
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-      }}
-    >
-      <div style={{ position: 'relative', width: 640, height: 480 }}>
-        <video
-          ref={videoRef}
-          autoPlay
-          playsInline
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-          }}
-        />
+    <div className="full-screen">
+      <div className="video-container">
+        <video ref={videoRef} autoPlay playsInline className="video" />
         <canvas
           ref={guideCanvasRef}
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-          }}
+          className="canvas"
           width={640}
           height={480}
         />
