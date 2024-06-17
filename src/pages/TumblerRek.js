@@ -12,7 +12,7 @@ function TumblerRek() {
   const query = useQuery();
   const name = query.get('name');
   const studentId = query.get('studentId');
-  const lang = query.get('lang');
+  const lang = query.get('lang') || 'kr';
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
 
