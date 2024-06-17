@@ -1,8 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
 import Webcam from 'react-webcam';
 import { useFaceDetection } from 'react-use-face-detection';
 import FaceDetection from '@mediapipe/face_detection';
 import { Camera } from '@mediapipe/camera_utils';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const apiURL = `${process.env.REACT_APP_BACKEND_URL}/users/login`;
@@ -10,6 +10,9 @@ const apiURL = `${process.env.REACT_APP_BACKEND_URL}/users/login`;
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
+
+const width = 600;
+const height = 1024;
 
 async function HandleFaceImage(imageString) {
   const data = {
@@ -38,10 +41,6 @@ const Login = () => {
   const lang = query.get('lang') || 'kr';
 
   const [photoTaken, setPhotoTaken] = useState(false);
-  const [dimensions, setDimensions] = useState({
-    width: window.innerWidth,
-    height: window.innerHeight,
-  });
   const detectionRef = useRef(null);
   const onResultsExecutedRef = useRef(false);
 
@@ -87,8 +86,8 @@ const Login = () => {
     camera: ({ mediaSrc, onFrame }) => {
       const cameraInstance = new Camera(mediaSrc, {
         onFrame,
-        width: dimensions.width,
-        height: dimensions.height,
+        width,
+        height,
       });
       detectionRef.current = cameraInstance;
       return cameraInstance;
@@ -96,44 +95,38 @@ const Login = () => {
   });
 
   useEffect(() => {
-    const handleResize = () => {
-      setDimensions({ width: window.innerWidth, height: window.innerHeight });
-    };
-
-    window.addEventListener('resize', handleResize);
-
     return () => {
-      window.removeEventListener('resize', handleResize);
       stopCamera();
     };
   }, []);
 
   return (
-    <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
-      {boundingBox.map((box, index) => (
-        <div
-          key={`${index + 1}`}
+    <div>
+      <div style={{ width, height, position: 'relative' }}>
+        {boundingBox.map((box, index) => (
+          <div
+            key={`${index + 1}`}
+            style={{
+              border: '4px solid red',
+              position: 'absolute',
+              top: `${box.yCenter * 100}%`,
+              left: `${box.xCenter * 100}%`,
+              width: `${box.width * 100}%`,
+              height: `${box.height * 100}%`,
+              zIndex: 1,
+            }}
+          />
+        ))}
+        <Webcam
+          ref={webcamRef}
+          forceScreenshotSourceSize
           style={{
-            border: '4px solid red',
+            height,
+            width,
             position: 'absolute',
-            top: `${box.yCenter * 100}%`,
-            left: `${box.xCenter * 100}%`,
-            width: `${box.width * 100}%`,
-            height: `${box.height * 100}%`,
-            zIndex: 1,
-            transform: 'translate(-50%, -50%)',
           }}
         />
-      ))}
-      <Webcam
-        ref={webcamRef}
-        forceScreenshotSourceSize
-        style={{
-          height: '100%',
-          width: '100%',
-          position: 'absolute',
-        }}
-      />
+      </div>
     </div>
   );
 };

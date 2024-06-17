@@ -9,7 +9,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import translate from 'translate';
 import _ from 'lodash';
 import Close from '../component/CloseButton';
-import './Register.css'; // Create a CSS file to handle dynamic styles
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -223,7 +222,7 @@ function Register() {
     };
 
     fetchData();
-  }, [lang]);
+  }, []);
 
   const handleDepartment = (department) => {
     setSelectedDepartment(department);
@@ -242,7 +241,7 @@ function Register() {
   };
 
   return (
-    <div className="App full-screen">
+    <div className="App">
       <Close />
       <header className="App-header">
         <MainText text={messages[lang][index]['mainText']} />
@@ -287,7 +286,7 @@ function Register() {
             </DropdownButton>
           </>
         )}
-        <div className="spacer" />
+        <div style={{ display: 'block', marginTop: '200px' }} />
         {index !== 3 && (
           <Button
             onClick={() => {
@@ -307,7 +306,7 @@ function Register() {
               if (index !== 2) document.getElementById('userInput').value = '';
             }}
             size="lg"
-            className="next-button"
+            style={{ width: '80%', height: '100px', fontSize: '50px' }}
           >
             {messages[lang][4]}
           </Button> // 다음 버튼
@@ -319,17 +318,17 @@ function Register() {
           <>
             <Button
               size="lg"
-              className="register-button"
+              style={{ width: '80%', height: '100px', fontSize: '50px' }}
               onClick={() => {
                 RegisterUser(name, studentId, major, lang, navigate, true);
               }}
             >
               {messages[lang][index]['ok']}
             </Button>
-            <div className="spacer" />
+            <div style={{ display: 'block', marginTop: '20px' }} />
             <Button
               size="lg"
-              className="register-button"
+              style={{ width: '80%', height: '100px', fontSize: '50px' }}
               onClick={() => {
                 RegisterUser(name, studentId, major, lang, navigate, false);
               }}
