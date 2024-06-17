@@ -67,7 +67,7 @@ function Reward() {
     const fetchReward = async () => {
       try {
         const response = await axios.patch(
-          `18.143.140.208:3000/users/${studentId}/point`,
+          `${process.env.BACKEND_URL}/users/${studentId}/point`,
         );
         setReward(response.data.point);
       } catch (error) {

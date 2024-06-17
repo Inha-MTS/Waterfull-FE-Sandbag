@@ -3,7 +3,7 @@ import 'react-barcode-scanner/polyfill';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 
-const apiURL = '18.143.140.208:3000/users/'; // 학번 조회 API URL
+const apiURL = `${process.env.BACKEND_URL}/users/`; // 학번 조회 API URL
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
