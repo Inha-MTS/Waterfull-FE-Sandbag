@@ -8,6 +8,7 @@ import { Button } from 'react-bootstrap';
 import { useNavigate, useLocation } from 'react-router-dom';
 import translate from 'translate';
 import _ from 'lodash';
+import Close from '../component/CloseButton';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -43,8 +44,8 @@ const messages = {
     },
     '다음',
     {
-      department: '학부 선택',
-      major: '학과 선택',
+      department: '    학부 선택    ',
+      major: '    학과 선택    ',
     },
   ],
   en: [
@@ -76,8 +77,8 @@ const messages = {
     },
     'Next',
     {
-      department: 'Select Department',
-      major: 'Select Major',
+      department: '    Select Department    ',
+      major: '    Select Major    ',
     },
   ],
   cn: [
@@ -109,8 +110,8 @@ const messages = {
     },
     '下一个',
     {
-      department: '选择部门',
-      major: '选择专业',
+      department: '    选择部门    ',
+      major: '    选择专业    ',
     },
   ],
 };
@@ -241,6 +242,7 @@ function Register() {
 
   return (
     <div className="App">
+      <Close />
       <header className="App-header">
         <MainText text={messages[lang][index]['mainText']} />
         <SubText text={messages[lang][index]['subText']} />
@@ -252,6 +254,8 @@ function Register() {
             <DropdownButton
               id="dropdown-department-button"
               title={departmentTitle}
+              size="lg"
+              style={{ marginBottom: '10px' }}
             >
               {Object.keys(majorList).map((department) => (
                 <Dropdown.Item
@@ -264,7 +268,11 @@ function Register() {
               ))}
             </DropdownButton>
 
-            <DropdownButton id="dropdown-major-button" title={majorTitle}>
+            <DropdownButton
+              id="dropdown-major-button"
+              title={majorTitle}
+              size="lg"
+            >
               {selectedDepartment &&
                 getMajorsForDepartment(selectedDepartment).map((major) => (
                   <Dropdown.Item

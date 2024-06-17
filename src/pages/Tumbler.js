@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import MainText from '../component/MainText';
 import SubText from '../component/SubText';
 import { useNavigate, useLocation } from 'react-router-dom';
+import Close from '../component/CloseButton';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -46,6 +47,7 @@ function Tumbler() {
 
   return (
     <div className="App">
+      <Close />
       <header className="App-header">
         <MainText
           text={messages[lang]['main'] + name + (lang === 'kr' ? '님' : '')}

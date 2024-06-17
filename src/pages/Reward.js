@@ -3,6 +3,7 @@ import MainText from '../component/MainText';
 import SubText from '../component/SubText';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Confetti from 'react-confetti';
+import Close from '../component/CloseButton';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -87,6 +88,7 @@ function Reward() {
   return (
     <>
       <div className="App">
+        <Close />
         <header className="App-header">
           <Demo />
           <MainText text={messages[lang]['main']} />
