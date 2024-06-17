@@ -308,13 +308,18 @@ function Register() {
         {index === 3 && (
           <>
             <Button
+              size="lg"
+              style={{ width: '80%', height: '100px', fontSize: '50px' }}
               onClick={() => {
                 RegisterUser(name, studentId, major, lang, navigate, true);
               }}
             >
               {messages[lang][index]['ok']}
             </Button>
+            <div style={{ display: 'block', marginTop: '20px' }} />
             <Button
+              size="lg"
+              style={{ width: '80%', height: '100px', fontSize: '50px' }}
               onClick={() => {
                 RegisterUser(name, studentId, major, lang, navigate, false);
               }}
