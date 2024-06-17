@@ -311,6 +311,9 @@ function Register() {
             {messages[lang][4]}
           </Button> // 다음 버튼
         )}
+        {index === 0 && (
+          <p>키보드는 화면 아래에서 위로 스와이프하면 나타납니다.</p>
+        )}
         {index === 3 && (
           <>
             <Button
