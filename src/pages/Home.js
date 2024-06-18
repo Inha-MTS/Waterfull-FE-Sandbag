@@ -38,18 +38,22 @@ function Home() {
   const navigate = useNavigate();
   const query = useQuery();
   const lang = query.get('lang') || 'kr';
-  const code = query.get('code') || '0';
+  const code = query.get('code') || 'NONE';
   const [showAlert, setShowAlert] = useState(false);
   const [message, setMessage] = useState('');
+  const [variant, setVariant] = useState('');
 
   useEffect(() => {
-    if (code !== '0') {
-      // 뭔가 보여줘야 함
-      if (code === '1') {
-        setMessage('얼굴 인식에 실패하였습니다. 다시 시도해주세요.');
-        console.log(message);
-      } else if (code === '2') {
-        setMessage('텀블러 인식에 실패하였습니다. 다시 시도해주세요.');
+    if (code !== 'NONE') {
+      if (code === 'WARN') {
+        setMessage('텀블러를 사용해주세요.');
+        setVariant('warning');
+      } else if (code === 'ALREADY_REGISTERED') {
+        setMessage('이미 가입된 사용자입니다. 로그인해주세요.');
+        setVariant('info');
+      } else if (code === 'NOT_REGISTERED') {
+        setMessage('가입되지 않은 사용자입니다. 회원가입부터 진행해주세요.');
+        setVariant('danger');
       }
       setShowAlert(true);
       const timer = setTimeout(() => {
@@ -58,13 +62,13 @@ function Home() {
 
       return () => clearTimeout(timer); // 컴포넌트가 언마운트될 때 타이머를 정리합니다.
     }
-  }, [message]); // message 상태가 변경될 때마다 이 useEffect가 실행됩니다.
+  }, [code]); // message 상태가 변경될 때마다 이 useEffect가 실행됩니다.
 
   return (
     <div className="App">
       {showAlert && (
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0 }}>
-          <Alert variant="danger">{message}</Alert>
+          <Alert variant={variant}>{message}</Alert>
         </div>
       )}
       <header className="App-header">
