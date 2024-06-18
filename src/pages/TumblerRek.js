@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Alert } from 'react-bootstrap';
-import { useState } from 'react';
+import './TumblerRek.css'; // Create a CSS file to handle dynamic styles
 
 const apiURL = `${process.env.REACT_APP_BACKEND_URL}/bottles/category`;
 
@@ -18,8 +17,6 @@ function TumblerRek() {
   const videoRef = useRef(null);
   const captureCanvasRef = useRef(null);
   const guideCanvasRef = useRef(null);
-  const [showAlert, setShowAlert] = useState(false);
-  const code = query.get('code') || 'NONE';
 
   useEffect(() => {
     async function enableStream() {
@@ -43,17 +40,6 @@ function TumblerRek() {
       }
     };
   }, []);
-
-  useEffect(() => {
-    if (code === 'RETRY') {
-      setShowAlert(true);
-    }
-    const timer = setTimeout(() => {
-      setShowAlert(false);
-    }, 8000); // 10초 후에 showAlert를 false로 설정하여 Alert를 숨깁니다.
-
-    return () => clearTimeout(timer); // 컴포넌트가 언마운트될 때 타이머를 정리합니다.
-  }, [code]); // message 상태가 변경될 때마다 이 useEffect가 실행됩니다.
 
   useEffect(() => {
     if (guideCanvasRef.current) {
@@ -106,11 +92,13 @@ function TumblerRek() {
             `/reward?name=${name}&studentId=${studentId}&lang=${lang}`,
           );
         } else if (status === 204 && category === 'tumbler') {
+          alert('텀블러 사진 재촬영이 필요합니다'); // TODO: 건탁 - 팝업에서 다른 메세지로 바꾸기
           return navigate(
-            `/tumbler-rek?name=${name}&studentId=${studentId}&lang=${lang}&code=RETRY`,
+            `/tumbler-rek?name=${name}&studentId=${studentId}&lang=${lang}`,
           );
         }
-        return navigate('/?lang=kr&code=WARN'); // Redirect to the home page temporarily
+        alert('텀블러를 사용하세요!');
+        return navigate('/'); // Redirect to the home page temporarily
       } catch (error) {
         console.error('Error uploading image:', error);
       }
@@ -120,24 +108,18 @@ function TumblerRek() {
   useEffect(() => {
     const timer = setTimeout(() => {
       capturePhoto();
-    }, 2000);
+    }, 3000);
 
     return () => clearTimeout(timer);
   });
 
   return (
     <div className="full-screen">
-      {showAlert && (
-        <Alert variant="warn" onClose={() => setShowAlert(false)} dismissible>
-          텀블러 사진 재촬영이 필요합니다.
-        </Alert>
-      )}
       <div className="video-container">
         <video ref={videoRef} autoPlay playsInline className="video" />
         <canvas
           ref={guideCanvasRef}
           className="canvas"
-          style={{ marginTop: '300px' }}
           width={640}
           height={480}
         />
