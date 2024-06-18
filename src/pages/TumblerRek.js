@@ -121,7 +121,7 @@ function TumblerRek() {
           ref={guideCanvasRef}
           className="canvas"
           width={640}
-          height={480}
+          height={820}
         />
         <canvas
           ref={captureCanvasRef}
