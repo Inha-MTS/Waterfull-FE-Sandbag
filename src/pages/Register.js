@@ -4,7 +4,7 @@ import SubText from '../component/SubText';
 import UserInput from '../component/UserInput';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
-import { Button } from 'react-bootstrap';
+import { Alert, Button } from 'react-bootstrap';
 import { useNavigate, useLocation } from 'react-router-dom';
 import translate from 'translate';
 import _ from 'lodash';
@@ -23,7 +23,7 @@ const messages = {
       input: true,
     },
     {
-      mainText: '안녕하세요 {} 님',
+      mainText: '안녕하세요!',
       subText: '8자리의 학번을 입력해주세요',
       placeholder: '12201830',
       input: true,
@@ -56,7 +56,7 @@ const messages = {
       input: true,
     },
     {
-      mainText: 'Hi {}',
+      mainText: 'Hi!',
       subText: 'Please enter your 8-digit student ID',
       placeholder: '12201830',
       input: true,
@@ -89,7 +89,7 @@ const messages = {
       input: true,
     },
     {
-      mainText: '嗨， {}',
+      mainText: '你好！',
       subText: '请输入您的8位学号',
       placeholder: '12201830',
       input: true,
@@ -142,8 +142,7 @@ async function RegisterUser(
     const registeredUser = await registeredUserRaw.json();
 
     if (registeredUser.status === 409) {
-      alert('이미 가입된 사용자입니다. 홈 화면으로 이동합니다.');
-      return navigate('/');
+      return navigate('/?code=ALREADY_REGISTERED');
     }
     if (registeredUser.status === 201 && registerFace)
       return navigate(`/register-face?studentId=${studentId}&lang=${lang}`);
@@ -171,7 +170,10 @@ function Register() {
   const [studentId, setStudentId] = useState('');
   const [major, setMajor] = useState('');
   const [majorList, setMajorList] = useState({});
+  const [showAlert, setShowAlert] = useState(false);
+  const Hangul = require('hangul-js');
   const navigate = useNavigate();
+  const code = query.get('code') || '';
 
   useEffect(() => {
     const fetchData = async () => {
@@ -222,7 +224,18 @@ function Register() {
     };
 
     fetchData();
-  }, []);
+  }, [lang]);
+
+  useEffect(() => {
+    if (code === 'NOT_REGISTERED') {
+      setShowAlert(true);
+      const timer = setTimeout(() => {
+        setShowAlert(false);
+      }, 8000); // 10초 후에 showAlert를 false로 설정하여 Alert를 숨깁니다.
+
+      return () => clearTimeout(timer); // 컴포넌트가 언마운트될 때 타이머를 정리합니다.
+    }
+  }, [code]); // message 상태가 변경될 때마다 이 useEffect가 실행됩니다.
 
   const handleDepartment = (department) => {
     setSelectedDepartment(department);
@@ -242,12 +255,26 @@ function Register() {
 
   return (
     <div className="App">
+      {showAlert && (
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0 }}>
+          <Alert variant="danger">
+            가입되지 않은 사용자입니다. 회원가입을 진행해주세요.
+          </Alert>
+        </div>
+      )}
       <Close />
       <header className="App-header">
         <MainText text={messages[lang][index]['mainText']} />
         <SubText text={messages[lang][index]['subText'].replace('{}', name)} />
         {index < 2 && (
-          <UserInput placeholder={messages[lang][index]['placeholder']} />
+          <UserInput
+            placeholder={messages[lang][index]['placeholder']}
+            onChange={() => {
+              document.getElementById('userInput').value = Hangul.assemble(
+                document.getElementById('userInput').value,
+              );
+            }}
+          />
         )}
         {index === 2 && (
           <>
@@ -293,12 +320,6 @@ function Register() {
               setInputValue(document.getElementById('userInput')?.value);
               if (index === 0) {
                 setName(document.getElementById('userInput').value);
-                messages[lang][index + 1]['mainText'] = messages[lang][
-                  index + 1
-                ]['mainText'].replace(
-                  '{}',
-                  document.getElementById('userInput').value,
-                );
               } else if (index === 1)
                 setStudentId(document.getElementById('userInput').value);
               else if (index === 2) setMajor(selectedMajor);
