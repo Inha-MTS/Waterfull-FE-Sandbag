@@ -137,6 +137,7 @@ function TumblerRek() {
         <canvas
           ref={guideCanvasRef}
           className="canvas"
+          style={{ marginTop: '300px' }}
           width={640}
           height={480}
         />
