@@ -10,7 +10,7 @@ function useQuery() {
 }
 
 const Demo = () => {
-  return <Confetti width={600} height={1024} />;
+  return <Confetti width={600} height={1024} gravity={0.8} />;
 };
 
 const messages = {
