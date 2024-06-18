@@ -23,7 +23,7 @@ const messages = {
       input: true,
     },
     {
-      mainText: '안녕하세요 {} 님',
+      mainText: '안녕하세요!',
       subText: '8자리의 학번을 입력해주세요',
       placeholder: '12201830',
       input: true,
@@ -56,7 +56,7 @@ const messages = {
       input: true,
     },
     {
-      mainText: 'Hi {}',
+      mainText: 'Hi!',
       subText: 'Please enter your 8-digit student ID',
       placeholder: '12201830',
       input: true,
@@ -89,7 +89,7 @@ const messages = {
       input: true,
     },
     {
-      mainText: '嗨， {}',
+      mainText: '你好！',
       subText: '请输入您的8位学号',
       placeholder: '12201830',
       input: true,
@@ -320,12 +320,6 @@ function Register() {
               setInputValue(document.getElementById('userInput')?.value);
               if (index === 0) {
                 setName(document.getElementById('userInput').value);
-                messages[lang][index + 1]['mainText'] = messages[lang][
-                  index + 1
-                ]['mainText'].replace(
-                  '{}',
-                  document.getElementById('userInput').value,
-                );
               } else if (index === 1)
                 setStudentId(document.getElementById('userInput').value);
               else if (index === 2) setMajor(selectedMajor);
